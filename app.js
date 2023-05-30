@@ -3,6 +3,7 @@ const express = require("express");
 const routes = require("./routes");
 const cors = require("cors");
 const logger = require("morgan");
+const { appDataSource } = require("./models/dataSource");
 
 const app = express();
 
@@ -18,5 +19,14 @@ app.get("/ping", function (req, res, next) {
 const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
+  appDataSource
+    .initialize()
+    .then(() => {
+      console.log(`Data Source has been initialized`);
+    })
+    .catch((err) => {
+      console.error(`ERROR during Data Source initialization`, err);
+      appDataSource.destroy();
+    });
   console.log(`server is running on port ${PORT}`);
 });
