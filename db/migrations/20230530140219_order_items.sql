@@ -1,6 +1,4 @@
 -- migrate:up
--- `project-1`.order_items definition
-
 CREATE TABLE `order_items` (
   `id` int NOT NULL AUTO_INCREMENT,
   `order_id` int NOT NULL,
