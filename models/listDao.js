@@ -1,26 +1,27 @@
-const appDataSource = require("./dataSource.js");
+const { appDataSource } = require("./dataSource.js");
 
 const getList = async (categoryId) => {
   try {
     return appDataSource.query(
       `
-            SELECT
-                p.id,
-                p.name,
-                p.price,
-                AVG(r.rating) as avgRating,
-                COUNT(r.rating) as countReview,
-                (
-                    SELECT JSON_ARRAYAGG(image_url)
-                    FROM product_images pi
-                    WHERE pi.product_id = p.id
-                ) as imageUrls
-            FROM products p
-            INNER JOIN subcategories sc ON sc.id = p.subcategory_id
-            INNER JOIN categories c     ON c.id = sc.category_id
-            LEFT JOIN reviews r         ON r.product_id = p.id
-            GROUP BY p.id
-        `
+        SELECT
+            p.id,
+            p.name,
+            p.price,
+            AVG(r.rating) as avgRating,
+            COUNT(r.rating) as countReview,
+            (
+                SELECT JSON_ARRAYAGG(image_url)
+                FROM product_images pi
+                WHERE pi.product_id = p.id
+            ) as imageUrls
+        FROM products p
+        INNER JOIN subcategories sc ON sc.id = p.subcategory_id
+        INNER JOIN categories c     ON c.id = sc.category_id AND c.id = ?
+        LEFT JOIN reviews r         ON r.product_id = p.id
+        GROUP BY p.id
+        `,
+      [categoryId]
     );
   } catch (err) {
     console.log(err);
@@ -34,7 +35,7 @@ const getAllList = async () => {
   try {
     return await appDataSource.query(
       `SELECT
-        id
+        *
       FROM users
         `
     );
