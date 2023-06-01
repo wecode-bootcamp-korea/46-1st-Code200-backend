@@ -4,7 +4,7 @@ CREATE TABLE `products` (
   `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `price` decimal(10,2) NOT NULL,
   `quantity` int NOT NULL,
-  `incoming_data` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `incoming_date` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `description` varchar(3000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `subcategory_id` int NOT NULL,
   `create_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
