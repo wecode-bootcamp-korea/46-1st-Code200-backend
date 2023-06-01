@@ -2,7 +2,6 @@ const { appDataSource } = require("./dataSource");
 
 const createUser = async (
     name,
-    username,
     email,
     phone,
     birthday,
@@ -19,7 +18,6 @@ const createUser = async (
         return await appDataSource.query(
             `INSERT INTO users(
                 name,
-                username,
                 email,
                 phone,
                 birthday,
@@ -31,11 +29,10 @@ const createUser = async (
                 agreement_private,
                 agreement_marketing,
                 agreement_terms
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 		`,
             [
                 name,
-                username,
                 email,
                 phone,
                 birthday,
@@ -75,7 +72,29 @@ const getByUserIdPassword = async (userId) => {
     }
 };
 
+const getByUserEmail = async (email) => {
+    console.log(" ----------------------------------------------------");
+    console.log("file: userDao.js:76 | getByUserEmail | email:", email);
+    console.log(" ----------------------------------------------------");
+    try {
+        const getUser = await appDataSource.query(
+            `
+        SELECT users.email
+        FROM users
+        WHERE email = ?
+        `,
+            [email]
+        );
+        return getUser[0];
+    } catch (err) {
+        const error = new Error("INVALID_DATA_INPUT");
+        error.statusCode = 500;
+        throw error;
+    }
+};
+
 module.exports = {
     createUser,
     getByUserIdPassword,
+    getByUserEmail,
 };

@@ -53,7 +53,24 @@ const signIn = catchAsync(async (req, res) => {
     return res.status(200).json({ message: "USER_CORRECT", accessToken });
 });
 
+const checkId = catchAsync(async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ message: "INVALID_INPUT" });
+    }
+
+    const isDuplicate = await userService.checkDuplicateId(email);
+
+    if (isDuplicate) {
+        return res.status(200).json({ duplicate: false });
+    }
+
+    return res.status(200).json({ duplicate: true });
+});
+
 module.exports = {
     signUp,
     signIn,
+    checkId,
 };

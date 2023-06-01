@@ -4,7 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const logger = require("morgan");
 const { appDataSource } = require("./models/dataSource");
-const routes = require("./services");
+const routes = require("./routes");
 const { accessToken } = require("./middleware/auth");
 const { globalHanderError } = require("./middleware/error");
 
