@@ -1,8 +1,8 @@
 const listDao = require("../models/listDao");
 
-const getList = async (categoryId) => {
-  const getList = await listDao.getList(categoryId);
-  return getList;
+const getProductList = async (categoryId) => {
+  const getProductList = await listDao.getProductList(categoryId);
+  return getProductList;
 };
 
 const getAllList = async () => {
@@ -11,6 +11,6 @@ const getAllList = async () => {
 };
 
 module.exports = {
-  getList,
+  getProductList,
   getAllList,
 };

@@ -1,6 +1,6 @@
 const { appDataSource } = require("./dataSource.js");
 
-const getList = async (categoryId) => {
+const getProductList = async (categoryId) => {
   try {
     return appDataSource.query(
       `
@@ -37,6 +37,7 @@ const getAllList = async () => {
       `SELECT
         *
       FROM users
+      ORDERS LIMIT 0, 10
         `
     );
   } catch (err) {
@@ -47,6 +48,6 @@ const getAllList = async () => {
 };
 
 module.exports = {
-  getList,
+  getProductList,
   getAllList,
 };
