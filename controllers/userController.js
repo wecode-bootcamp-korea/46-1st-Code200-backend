@@ -23,60 +23,59 @@ const checkEmail = catchAsync(async (req, res) => {
   return res.status(200).json({ theEmailExist: true });
 });
 
-const signUp = async (req, res) => {
-  try {
-    const {
-      name,
-      email,
-      phone_number,
-      birthday,
-      gender,
-      address,
-      address_detail,
-      password,
-      point,
-      agreement_private,
-      agreement_marketing,
-      agreement_terms,
-    } = req.body;
-    if (
-      !name ||
-      !email ||
-      !phone_number ||
-      !birthday ||
-      !gender ||
-      !address ||
-      !address_detail ||
-      !password ||
-      !point ||
-      !agreement_private ||
-      !agreement_private ||
-      !agreement_marketing ||
-      !agreement_terms
-    ) {
-      return res.status(400).json({ message: "KEY_ERROR" });
-    }
+const signUp = catchAsync(async (req, res) => {
+  const {
+    name,
+    email,
+    phone_number,
+    birthday,
+    gender,
+    address,
+    address_detail,
+    password,
+    point,
+    agreement_private,
+    agreement_marketing,
+    agreement_terms,
+  } = req.body;
 
-    await userService.signUp(
-      name,
-      email,
-      phone_number,
-      birthday,
-      gender,
-      address,
-      address_detail,
-      password,
-      point,
-      agreement_private,
-      agreement_marketing,
-      agreement_terms
-    );
-    return res.status(201).json({ message: "SIGNUP_SUCESS" });
-  } catch (err) {
-    return res.status(err.statusCode || 500).json({ message: err.message });
+  await passwordValidationCheck(password);
+  await emailValidationCheck(email);
+
+  if (
+    !name ||
+    !email ||
+    !phone_number ||
+    !birthday ||
+    !gender ||
+    !address ||
+    !address_detail ||
+    !password ||
+    !point ||
+    !agreement_private ||
+    !agreement_private ||
+    !agreement_marketing ||
+    !agreement_terms
+  ) {
+    return res.status(400).json({ message: "KEY_ERROR" });
   }
-};
 
+  await userService.signUp(
+    name,
+    email,
+    phone_number,
+    birthday,
+    gender,
+    address,
+    address_detail,
+    password,
+    point,
+    agreement_private,
+    agreement_marketing,
+    agreement_terms
+  );
+  return res.status(201).json({ message: "SIGNUP_SUCESS" });
+});
 const signIn = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {

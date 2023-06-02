@@ -52,29 +52,53 @@ const createUser = async (
     throw error;
   }
 };
-const getByUserIdPassword = async (userId) => {
+
+const getUserByEmail = async (email) => {
   try {
     const getUser = await appDataSource.query(
       `
       SELECT
-      users.email as userId,
-      users.password as password
+        id,
+        users.email,
+        users.password
       FROM users
       WHERE users.email=?
+      `,
+      [email]
+    );
+    return getUser[0];
+  } catch (err) {
+    const error = new Error("INVALID_DATA_INPUT");
+    error.statusCode = 400;
+    throw error;
+  }
+};
+
+const getUserById = async (userId) => {
+  try {
+    const getUser = await appDataSource.query(
+      `
+      SELECT
+      id,
+      users.email,
+      users.password
+      FROM users
+      WHERE users.id=?
       `,
       [userId]
     );
     return getUser[0];
   } catch (err) {
     const error = new Error("INVALID_DATA_INPUT");
-    error.statusCode = 500;
+    error.statusCode = 400;
     throw error;
   }
 };
 
 const getByUserEmail = async (email) => {
   try {
-    const getUser = await appDataSource.query(
+    console.log(email);
+    const [user] = await appDataSource.query(
       `
         SELECT users.email
         FROM users
@@ -83,11 +107,7 @@ const getByUserEmail = async (email) => {
       [email]
     );
 
-    if (!getUser || getUser.length === 0) {
-      return [{ message: "The email is available for use.", available: true }];
-    }
-
-    return { message: "The email is unavailable.", available: false };
+    return user;
   } catch (err) {
     const error = new Error(
       "An error occurred while checking the email availability."
@@ -99,6 +119,7 @@ const getByUserEmail = async (email) => {
 
 module.exports = {
   createUser,
-  getByUserIdPassword,
+  getUserById,
   getByUserEmail,
+  getUserByEmail,
 };

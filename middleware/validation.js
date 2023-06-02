@@ -1,25 +1,25 @@
 const emailValidationCheck = async (email) => {
-  const emailValidation = new RegExp("^[a-z]{2,}@[a-z]{2,}.[a-z]{2,}$");
-
-  if (!emailValidation.test(email)) {
+  const emailRegex = new RegExp(
+    // "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,}$"
+    // "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"
+    "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"
+  );
+  console.log(email);
+  if (!emailRegex.test(email)) {
     const error = new Error("EMAIL_IS_NOT_VALID");
-    error.statusCode = 400;
+    error.statusCode = 409;
     throw error;
   }
-  return emailValidation;
 };
-
 const passwordValidationCheck = async (password) => {
-  const pwValidation = new RegExp(
+  const passwordRegex = new RegExp(
     "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,20})"
   );
-
-  if (!pwValidation.test(password)) {
+  if (!passwordRegex.test(password)) {
     const error = new Error("PASSWORD_IS_NOT_VALID");
-    error.statusCode = 400;
+    error.statusCode = 409;
     throw error;
   }
-  return pwValidation;
 };
 
 module.exports = {
