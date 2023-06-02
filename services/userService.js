@@ -1,6 +1,15 @@
 const userDao = require("../models/userDao");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const {
+  passwordValidationCheck,
+  emailValidationCheck,
+} = require("../utils/validationCheck");
+
+const checkEmail = async (email) => {
+  const [user] = await userDao.getUserByEmail(email);
+  return user;
+};
 
 const signIn = async (email, password) => {
   const getUser = await userDao.getByUserIdPassword(email, password);
@@ -54,32 +63,27 @@ const signUp = async (
     error.statusCode = 409;
     throw error;
   }
-};
 
-const saltRounds = 10;
-const hashedPassword = await bcrypt.hash(password, saltRounds);
-const createUser = await userDao.createUser(
-  name,
-  email,
-  phone_number,
-  birthday,
-  gender,
-  address,
-  address_detail,
-  hashedPassword,
-  point,
-  agreement_private,
-  agreement_marketing,
-  agreement_terms
-);
-return createUser;
-const checkDuplicateId = async (email) => {
-  const existingUser = await userDao.getByUserEmail(email);
-  return existingUser !== null;
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  const createUser = await userDao.createUser(
+    name,
+    email,
+    phone_number,
+    birthday,
+    gender,
+    address,
+    address_detail,
+    hashedPassword,
+    point,
+    agreement_private,
+    agreement_marketing,
+    agreement_terms
+  );
+  return createUser;
 };
-
 module.exports = {
   signUp,
   signIn,
-  checkDuplicateId,
+  checkEmail,
 };

@@ -1,5 +1,27 @@
 const userService = require("../services/userService");
 const { catchAsync } = require("../middleware/error");
+const {
+  emailValidationCheck,
+  passwordValidationCheck,
+} = require("../utils/validation");
+
+const checkEmail = catchasync(async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    const error = new Error(" EMPTY email ! ");
+    error.statuscode = 400;
+    throw error;
+  }
+
+  await emailValidationCheck(email);
+
+  const result = await userService.checkEmail(email);
+
+  if (!result) return res.status(200).json({ theEmailExist: false });
+
+  return res.status(200).json({ theEmailExist: true });
+});
 
 const signUp = async (req, res) => {
   try {
@@ -65,8 +87,8 @@ const signIn = catchAsync(async (req, res) => {
   return res.status(200).json({ message: "USER_CORRECT", accessToken });
 });
 
-const checkId = (module.exports = {
+module.exports = {
   signUp,
   signIn,
-  checkId,
-});
+  checkEmail,
+};
