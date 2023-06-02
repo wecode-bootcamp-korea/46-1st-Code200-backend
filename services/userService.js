@@ -4,10 +4,10 @@ const jwt = require("jsonwebtoken");
 const {
   passwordValidationCheck,
   emailValidationCheck,
-} = require("../utils/validationCheck");
+} = require("../middleware/validation");
 
 const checkEmail = async (email) => {
-  const [user] = await userDao.getUserByEmail(email);
+  const [user] = await userDao.getByUserEmail(email);
   return user;
 };
 

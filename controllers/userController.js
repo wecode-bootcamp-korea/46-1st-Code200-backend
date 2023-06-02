@@ -3,9 +3,9 @@ const { catchAsync } = require("../middleware/error");
 const {
   emailValidationCheck,
   passwordValidationCheck,
-} = require("../utils/validation");
+} = require("../middleware/validation");
 
-const checkEmail = catchasync(async (req, res) => {
+const checkEmail = catchAsync(async (req, res) => {
   const { email } = req.body;
 
   if (!email) {

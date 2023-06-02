@@ -84,7 +84,7 @@ const getByUserEmail = async (email) => {
     );
 
     if (!getUser || getUser.length === 0) {
-      return { message: "The email is available for use.", available: true };
+      return [{ message: "The email is available for use.", available: true }];
     }
 
     return { message: "The email is unavailable.", available: false };
