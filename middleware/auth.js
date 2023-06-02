@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
-const userDao = require("../models/userDao");
+const userService = require("../services/userService");
 
 const verifyJWT = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
 
-    if (!req.headers.authorization) {
+    if (!token) {
       res.status(401).json({ message: "UNAUTHORIZE" });
     }
 
@@ -16,11 +16,12 @@ const verifyJWT = async (req, res, next) => {
       return res.status(401).json({ message: "Erro UNAUTHORIZE" });
     }
 
-    const userDataFromDb = await userDao.getByUserIdPassword(userId);
+    const user = await userService.getUserById(userId);
 
-    if (!userDataFromDb.userId) {
+    if (!user) {
       return res.status(401).json({ message: "Erro GETDATABASE" });
     }
+    req.user = user;
 
     next();
   } catch (err) {

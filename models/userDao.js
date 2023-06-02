@@ -52,15 +52,38 @@ const createUser = async (
     throw error;
   }
 };
-const getUserByemail = async (userId) => {
+
+const getUserByEmail = async (email) => {
   try {
     const getUser = await appDataSource.query(
       `
       SELECT
-      users.email as userId,
-      users.password as password
+        id,
+        users.email,
+        users.password
       FROM users
       WHERE users.email=?
+      `,
+      [email]
+    );
+    return getUser[0];
+  } catch (err) {
+    const error = new Error("INVALID_DATA_INPUT");
+    error.statusCode = 400;
+    throw error;
+  }
+};
+
+const getUserById = async (userId) => {
+  try {
+    const getUser = await appDataSource.query(
+      `
+      SELECT
+        id,
+        users.email,
+        users.password
+      FROM users
+      WHERE users.id=?
       `,
       [userId]
     );
@@ -74,5 +97,6 @@ const getUserByemail = async (userId) => {
 
 module.exports = {
   createUser,
-  getUserByemail,
+  getUserByEmail,
+  getUserById,
 };

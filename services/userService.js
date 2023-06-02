@@ -3,7 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const signIn = async (email, password) => {
-  const getUser = await userDao.getUserByemail(email, password);
+  const getUser = await userDao.getUserByEmail(email);
+  console.log(getUser);
   if (!getUser) {
     throw new Error("INVAILD ERROR");
   }
@@ -15,8 +16,9 @@ const signIn = async (email, password) => {
     error.statusCode = 401;
     throw error;
   }
+
   const payload = {
-    userId: getUser.userId,
+    userId: getUser.id,
   };
   const header = {
     algorithm: process.env.ALGORITHM,
@@ -68,7 +70,12 @@ const signUp = async (
   return createUser;
 };
 
+const getUserById = async (userId) => {
+  return userDao.getUserById(userId);
+};
+
 module.exports = {
   signUp,
   signIn,
+  getUserById,
 };
