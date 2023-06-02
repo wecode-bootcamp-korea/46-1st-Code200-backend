@@ -46,32 +46,33 @@ const signUp = async (
     err.statusCode = 409;
     throw err;
   }
-  const emailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailValidation.test(email)) {
-    const err = new Error("EMAIL_IS_NOT_VALID");
-    err.statusCode = 400;
-    throw err;
-  }
 
-  const saltRounds = 10;
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
-  const createUser = await userDao.createUser(
-    name,
-    email,
-    phone_number,
-    birthday,
-    gender,
-    address,
-    address_detail,
-    hashedPassword,
-    point,
-    agreement_private,
-    agreement_marketing,
-    agreement_terms
-  );
-  return createUser;
+  const emailValidation = new RegExp("^[a-z]{2,}@[a-z]{2,}.[a-z]{2,}$");
+
+  if (!emailValidation.test(email)) {
+    const error = new Error("EMAIL_IS_NOT_VALID");
+    error.statusCode = 409;
+    throw error;
+  }
 };
 
+const saltRounds = 10;
+const hashedPassword = await bcrypt.hash(password, saltRounds);
+const createUser = await userDao.createUser(
+  name,
+  email,
+  phone_number,
+  birthday,
+  gender,
+  address,
+  address_detail,
+  hashedPassword,
+  point,
+  agreement_private,
+  agreement_marketing,
+  agreement_terms
+);
+return createUser;
 const checkDuplicateId = async (email) => {
   const existingUser = await userDao.getByUserEmail(email);
   return existingUser !== null;
