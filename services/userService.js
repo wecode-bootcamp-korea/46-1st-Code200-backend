@@ -20,12 +20,12 @@ const signIn = async (email, password) => {
   const payload = {
     userId: getUser.id,
   };
-  const header = {
-    algorithm: process.env.ALGORITHM,
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  };
+  // const header = {
+  //   algorithm: process.env.ALGORITHM,
+  //   expiresIn: process.env.JWT_EXPIRES_IN,
+  // };
 
-  const accessToken = jwt.sign(payload, process.env.JWT_SECRET, header);
+  const accessToken = jwt.sign(payload, process.env.JWT_SECRET);
   return accessToken;
 };
 

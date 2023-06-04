@@ -1,4 +1,5 @@
 const userService = require("../services/userService");
+const jwt = require("jsonwebtoken");
 const { catchAsync } = require("../middleware/error");
 
 const signUp = catchAsync(async (req, res) => {
