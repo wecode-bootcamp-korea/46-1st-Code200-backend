@@ -4,7 +4,7 @@ const catchAsync = (func) => {
   };
 };
 
-const globalHanderError = (err, req, res, next) => {
+const globalErrorHandler = (err, req, res, next) => {
   console.error(err.stack);
   console.log(err);
   return res.status(err.statusCode || 500).json({ message: err.message });
@@ -12,5 +12,5 @@ const globalHanderError = (err, req, res, next) => {
 
 module.exports = {
   catchAsync,
-  globalHanderError,
+  globalErrorHandler,
 };
