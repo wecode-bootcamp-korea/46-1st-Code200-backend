@@ -1,18 +1,11 @@
 const reviewDao = require("../models/reviewDao");
 
 const reviewSignUp = async (userId, productId, content, rating) => {
-  const createReview = await reviewDao.createReview(
-    userId,
-    productId,
-    content,
-    rating
-  );
-  return createReview;
+  return reviewDao.createReview(userId, productId, content, rating);
 };
 
 const getAllReview = async (productId) => {
-  const getAllReview = await reviewDao.getAllReview(productId);
-  return getAllReview;
+  return reviewDao.getAllReview(productId);
 };
 
 module.exports = {

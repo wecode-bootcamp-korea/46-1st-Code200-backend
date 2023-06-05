@@ -1,18 +1,19 @@
 const reviewService = require("../services/reviewService");
+const { catchAsync } = require("../middleware/error");
 
-const reviewSignup = async (req, res) => {
+const reviewSignup = catchAsync(async (req, res) => {
   try {
     const userId = req.user.id;
-    const { productId } = req.params;
+    const { productId } = req.query;
     const { content, rating } = req.body;
     await reviewService.reviewSignUp(userId, productId, content, rating);
     return res.status(201).json({ message: "REVIEW_POSTED" });
   } catch (err) {
     return res.status(err.statusCode || 500).json({ message: err.message });
   }
-};
+});
 
-const getAllReview = async (req, res) => {
+const getAllReview = catchAsync(async (req, res) => {
   try {
     const { productId } = req.params;
     const result = await reviewService.getAllReview(productId);
@@ -20,7 +21,7 @@ const getAllReview = async (req, res) => {
   } catch (err) {
     return res.status(err.statusCode || 500).json({ message: err.message });
   }
-};
+});
 
 module.exports = {
   reviewSignup,
