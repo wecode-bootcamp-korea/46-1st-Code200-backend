@@ -2,7 +2,8 @@ const likeService = require("../services/likeService");
 
 const createLike = async (req, res) => {
   try {
-    const { userId, productId } = req.params;
+    const { userId } = req.user;
+    const { productId } = req.params;
     await likeService.createLike(userId, productId);
     return res.status(201).json({ message: "LIKE CREATED" });
   } catch (err) {
