@@ -1,6 +1,20 @@
 const { appDataSource } = require("./dataSource");
 
 const createReview = async (userId, productId, content, rating) => {
+  console.log(
+    "🚀 ------------------------------------------------------------------------------------------------------------------🚀"
+  );
+  console.log(
+    "🚀 | file: reviewDao.js:4 | createReview | userId, productId, content, rating:",
+    userId,
+    productId,
+    content,
+    rating
+  );
+  console.log(
+    "🚀 ------------------------------------------------------------------------------------------------------------------🚀"
+  );
+
   try {
     return await appDataSource.query(
       `
