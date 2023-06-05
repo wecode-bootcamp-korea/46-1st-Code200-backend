@@ -2,14 +2,9 @@ const cartService = require("../services/cartService");
 const { catchAsync } = require("../middleware/error");
 
 const getCartList = catchAsync(async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const cartsData = await cartService.getCartList(userId);
-
-    return res.status(200).json({ data: cartsData });
-  } catch (err) {
-    return res.status(err.statusCode || 400).json({ message: err.message });
-  }
+  const userId = req.user.id;
+  const cartsData = await cartService.getCartList(userId);
+  return res.status(200).json({ data: cartsData });
 });
 
 const updateCartQuantity = catchAsync(async (req, res) => {

@@ -10,7 +10,7 @@ const getCartList = async (userId) => {
       products.name,
       products.price,
       sizes.name as size
-    FROM carts
+      FROM carts
       INNER JOIN users ON users.id = carts.user_id
       LEFT JOIN products ON products.id = carts.product_id
       LEFT JOIN sizes ON carts.size_id = sizes.id
