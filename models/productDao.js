@@ -28,7 +28,6 @@ const getProductDetail = async (productId) => {
       [productId]
     );
   } catch (err) {
-    console.log(err);
     const error = new Error("INVALID_DETAILDATA");
     error.statusCode = 400;
     throw error;

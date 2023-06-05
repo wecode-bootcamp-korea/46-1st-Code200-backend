@@ -28,8 +28,9 @@ const getAllReview = async (productId) => {
       p.name, 
       c.name as category,
       sb.name as subcategory,
+      COUNT(r.rating) as reviewcount,
       JSON_ARRAYAGG(JSON_OBJECT(
-        "userId", u.id,
+        "userId", u.name,
         "content", r.content,
         "rating", r.rating)) AS content
       FROM products AS p
@@ -47,9 +48,6 @@ const getAllReview = async (productId) => {
       [productId]
     );
   } catch (err) {
-    console.log("🚀 -----------------------------------------------------🚀");
-    console.log("🚀 | file: reviewDao.js:50 | getAllReview | err:", err);
-    console.log("🚀 -----------------------------------------------------🚀");
     const error = new Error("INVALID_REVIEW_DATA");
     error.statusCode = 500;
     throw error;
