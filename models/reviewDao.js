@@ -20,41 +20,6 @@ const createReview = async (userId, productId, content, rating) => {
   }
 };
 
-const getAllReview = async (productId) => {
-  try {
-    return await appDataSource.query(
-      `
-      SELECT
-      p.name, 
-      c.name as category,
-      sb.name as subcategory,
-      COUNT(r.rating) as reviewcount,
-      JSON_ARRAYAGG(JSON_OBJECT(
-        "userId", u.name,
-        "content", r.content,
-        "rating", r.rating)) AS content
-      FROM products AS p
-      INNER JOIN reviews AS r 
-      ON r.product_id = p.id
-      INNER JOIN users as u
-      ON u.id = r.user_id       
-      INNER JOIN subcategories as sb
-      ON sb.id = p.subcategory_id 
-      INNER JOIN categories as c
-      ON c.id = sb.category_id
-      WHERE p.id = ?
-      GROUP BY p.name, c.name, sb.name
-	`,
-      [productId]
-    );
-  } catch (err) {
-    const error = new Error("INVALID_REVIEW_DATA");
-    error.statusCode = 500;
-    throw error;
-  }
-};
-
 module.exports = {
   createReview,
-  getAllReview,
 };

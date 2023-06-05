@@ -8,14 +8,20 @@ const getProductDetail = async (productId) => {
       p.name, 
       p.price, 
       p.description, 
+      COUNT(r.rating) as reviewcount,
+      JSON_ARRAYAGG(JSON_OBJECT(
+        "userId", u.name,
+        "content", r.content,
+        "rating", r.rating)) AS content,
       JSON_OBJECT("imageUrl", pi.image_url) as image,
       c.name as category,
       sb.name as subcategory,
-      JSON_ARRAYAGG(JSON_OBJECT("content", r.content)) AS content,
       ROUND(AVG(r.rating),1) AS average_rating
       FROM products AS p
       INNER JOIN reviews AS r 
       ON r.product_id = p.id
+      INNER JOIN users as u
+      ON u.id = r.user_id    
       INNER JOIN product_images as pi
       ON pi.product_id = p.id       
       INNER JOIN subcategories as sb

@@ -13,17 +13,6 @@ const reviewSignup = catchAsync(async (req, res) => {
   }
 });
 
-const getAllReview = catchAsync(async (req, res) => {
-  try {
-    const { productId } = req.params;
-    const result = await reviewService.getAllReview(productId);
-    return res.status(201).json({ data: result });
-  } catch (err) {
-    return res.status(err.statusCode || 500).json({ message: err.message });
-  }
-});
-
 module.exports = {
   reviewSignup,
-  getAllReview,
 };
