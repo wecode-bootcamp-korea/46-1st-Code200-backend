@@ -4,7 +4,7 @@ const createLike = async (userId, productId) => {
   try {
     return await appDataSource.query(
       `INSERT INTO likes(
-            user_id,
+            users_id,
             product_id
         ) VALUES (?, ?);
         `,

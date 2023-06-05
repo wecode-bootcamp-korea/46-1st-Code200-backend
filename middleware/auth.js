@@ -16,7 +16,7 @@ const verifyJWT = async (req, res, next) => {
       return res.status(401).json({ message: "Erro UNAUTHORIZE" });
     }
 
-    const user = await userService.getUserById(userId);
+    const user = await userService.getUserById(verifyId);
 
     if (!user) {
       return res.status(401).json({ message: "Erro GETDATABASE" });
