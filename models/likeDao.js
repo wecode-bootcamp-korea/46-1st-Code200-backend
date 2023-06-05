@@ -11,9 +11,6 @@ const createLike = async (userId, productId) => {
       [userId, productId]
     );
   } catch (err) {
-    console.log("🚀 -------------------------------------------------🚀");
-    console.log("🚀 | file: likeDao.js:14 | createLike | err:", err);
-    console.log("🚀 -------------------------------------------------🚀");
     const error = new Error("INVALID_LIKEDATA_INPUT");
     error.statusCode = 500;
     throw error;
