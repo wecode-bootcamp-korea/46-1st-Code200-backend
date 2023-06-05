@@ -2,7 +2,7 @@ const { appDataSource } = require("./dataSource");
 
 const createLike = async (userId, productId) => {
   try {
-    return await appDataSource.query(
+    const postLike = await appDataSource.query(
       `INSERT INTO likes(
             users_id,
             product_id
@@ -10,6 +10,17 @@ const createLike = async (userId, productId) => {
         `,
       [userId, productId]
     );
+    const countLike = await appDataSource.query(
+      `
+      SELECT
+      COUNT(product_id) as count
+      FROM likes as l
+      WHERE l.product_id = ?
+      `,
+      [productId]
+    );
+    const count = parseInt(countLike[0]["count"]);
+    return { postLike, count };
   } catch (err) {
     const error = new Error("INVALID_LIKEDATA_INPUT");
     error.statusCode = 500;

@@ -5,8 +5,8 @@ const createLike = catchAsync(async (req, res) => {
   try {
     const userId = req.user.id;
     const { productId } = req.params;
-    await likeService.createLike(userId, productId);
-    return res.status(201).json({ message: "LIKE CREATED" });
+    const likeResult = await likeService.createLike(userId, productId);
+    return res.status(201).json(likeResult);
   } catch (err) {
     return res.status(err.statusCode || 500).json({ message: err.message });
   }
