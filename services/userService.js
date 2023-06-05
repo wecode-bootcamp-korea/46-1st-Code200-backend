@@ -2,21 +2,21 @@ const userDao = require("../models/userDao");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+const checkEmail = async (email) => {
+  return userDao.checkRegisterdEmail(email);
+};
+
 const signIn = async (email, password) => {
   const getUser = await userDao.getUserByEmail(email);
-  console.log(getUser);
   if (!getUser) {
     throw new Error("INVAILD ERROR");
   }
-
   const isMatched = await bcrypt.compare(password, getUser.password);
-
   if (!isMatched) {
     const error = new Error("INVALID_USER");
     error.statusCode = 401;
     throw error;
   }
-
   const payload = {
     userId: getUser.id,
   };
@@ -77,5 +77,6 @@ const getUserById = async (userId) => {
 module.exports = {
   signUp,
   signIn,
+  checkEmail,
   getUserById,
 };
