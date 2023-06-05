@@ -79,9 +79,9 @@ const getUserById = async (userId) => {
     const getUser = await appDataSource.query(
       `
       SELECT
-        id,
-        users.email,
-        users.password
+      id,
+      users.email,
+      users.password
       FROM users
       WHERE users.id=?
       `,
@@ -95,8 +95,32 @@ const getUserById = async (userId) => {
   }
 };
 
+const checkRegisterdEmail = async (email) => {
+  try {
+    const [result] = await appDataSource.query(
+      `
+        SELECT EXISTS(
+          SELECT
+          id
+        FROM users
+        WHERE email = ?
+        ) as registerd
+      `,
+      [email]
+    );
+    return !!parseInt(result.registerd);
+  } catch (err) {
+    const error = new Error(
+      "An error occurred while checking the email availability."
+    );
+    error.statusCode = 400;
+    throw error;
+  }
+};
+
 module.exports = {
   createUser,
-  getUserByEmail,
   getUserById,
+  checkRegisterdEmail,
+  getUserByEmail,
 };
