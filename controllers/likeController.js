@@ -22,18 +22,7 @@ const deleteLike = async (req, res) => {
   }
 };
 
-const getCountLike = async (req, res) => {
-  try {
-    const { productId } = req.params;
-    const count = await likeService.getCountLike(productId);
-    return res.status(200).json({ data: count });
-  } catch (err) {
-    return res.status(err.statusCode || 500).json({ message: err.message });
-  }
-};
-
 module.exports = {
   createLike,
   deleteLike,
-  getCountLike,
 };
