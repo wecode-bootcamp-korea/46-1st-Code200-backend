@@ -38,18 +38,6 @@ const deleteCartList = async (req, res) => {
 const deleteCartItems = async (req, res) => {
   try {
     const cartIds = req.body.cartIds;
-
-    console.log(
-      "🚀 ---------------------------------------------------------------------🚀"
-    );
-    console.log(
-      "🚀 | file: cartController.js:41 | deleteCartItems | cartIds:",
-      cartIds
-    );
-    console.log(
-      "🚀 ---------------------------------------------------------------------🚀"
-    );
-    console.log(cartIds);
     await cartService.deleteCartItems(cartIds);
     return res.status(204).json({ cartIds });
   } catch (err) {
