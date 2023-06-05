@@ -1,8 +1,9 @@
 const express = require("express");
-const router = express.Router();
-const reviewController = require("../controllers/reviewController");
 
 const { verifyJWT } = require("../middleware/auth");
+const reviewController = require("../controllers/reviewController");
+
+const router = express.Router();
 
 router.post("/:productId", verifyJWT, reviewController.reviewSignup);
 
