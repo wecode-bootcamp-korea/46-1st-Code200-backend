@@ -1,9 +1,9 @@
 const categoryDao = require("../models/categoryDao");
 
 const getCategoryDetail = async () => {
-  const getCategoryDetail = await categoryDao.getCategoryDetail();
-  return getCategoryDetail;
+  return categoryDao.getCategoryDetail();
 };
+
 module.exports = {
   getCategoryDetail,
 };

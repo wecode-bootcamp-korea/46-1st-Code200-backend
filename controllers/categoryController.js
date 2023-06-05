@@ -1,13 +1,10 @@
 const categoryService = require("../services/categoryService");
+const { catchAsync } = require("../middleware/error");
 
-const getCategoryDetail = async (req, res) => {
-  try {
-    const category = await categoryService.getCategoryDetail();
-    return res.status(200).json({ data: category });
-  } catch (err) {
-    return res.status(err.statusCode || 500).json({ message: err.message });
-  }
-};
+const getCategoryDetail = catchAsync(async (req, res) => {
+  const category = await categoryService.getCategoryDetail();
+  return res.status(200).json({ data: category });
+});
 
 module.exports = {
   getCategoryDetail,
