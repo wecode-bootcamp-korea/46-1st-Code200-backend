@@ -4,7 +4,7 @@ const { catchAsync } = require("../middleware/error");
 const reviewSignup = catchAsync(async (req, res) => {
   try {
     const userId = req.user.id;
-    const { productId } = req.query;
+    const { productId } = req.params;
     const { content, rating } = req.body;
     await reviewService.reviewSignUp(userId, productId, content, rating);
     return res.status(201).json({ message: "REVIEW_POSTED" });

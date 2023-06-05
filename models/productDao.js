@@ -2,41 +2,59 @@ const { appDataSource } = require("./dataSource");
 
 const getProductDetail = async (productId) => {
   try {
-    return await appDataSource.query(
+    const [product] = await appDataSource.query(
       `
       SELECT
       p.name, 
       p.price, 
-      p.description, 
-      COUNT(r.rating) as reviewcount,
-      JSON_ARRAYAGG(JSON_OBJECT(
-        "userId", u.name,
-        "content", r.content,
-        "rating", r.rating)) AS content,
-      JSON_OBJECT("imageUrl", pi.image_url) as image,
+      p.description,
+      (
+        SELECT ROUND(AVG(r.rating), 1) FROM reviews WHERE r.product_id = p.id
+      )as average,
+      JSON_ARRAYAGG(pi.image_url) as imageUrls,
       c.name as category,
-      sb.name as subcategory,
-      ROUND(AVG(r.rating),1) AS average_rating
+      sb.name as subcategory
       FROM products AS p
-      INNER JOIN reviews AS r 
-      ON r.product_id = p.id
-      INNER JOIN users as u
-      ON u.id = r.user_id    
+      LEFT JOIN reviews as r
+        ON r.product_id = p.id
       INNER JOIN product_images as pi
-      ON pi.product_id = p.id       
+        ON pi.product_id = p.id
       INNER JOIN subcategories as sb
-      ON sb.id = p.subcategory_id 
+        ON sb.id = p.subcategory_id 
       INNER JOIN categories as c
-      ON c.id = sb.category_id
+        ON c.id = sb.category_id
       WHERE p.id = ?
-      GROUP BY p.name, p.price, p.description, pi.image_url, c.name, sb.name
-	`,
+      GROUP BY p.id
+	  `,
       [productId]
     );
+
+    const reviews = await appDataSource.query(
+      `
+        SELECT 
+          u.id as userId,
+          u.name as userName,
+          r.content as content,
+          r.rating as rating
+        FROM reviews r
+        INNER JOIN users u ON u.id = r.user_id
+        WHERE r.product_id = ?
+    `,
+      [productId]
+    );
+
+    return { product, reviews };
   } catch (err) {
+    console.log(
+      "🚀 ----------------------------------------------------------🚀"
+    );
+    console.log("🚀 | file: productDao.js:48 | getProductDetail | err:", err);
+    console.log(
+      "🚀 ----------------------------------------------------------🚀"
+    );
     const error = new Error("INVALID_DETAILDATA");
     error.statusCode = 400;
-    throw error;
+    throw err;
   }
 };
 
