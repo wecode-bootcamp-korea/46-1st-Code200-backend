@@ -10,7 +10,13 @@ const deleteLike = async (userId, productId) => {
   return deleteLike;
 };
 
+const getCountLike = async (productId) => {
+  const getCountLike = await likeDao.getCountLike(productId);
+  return getCountLike;
+};
+
 module.exports = {
   createLike,
   deleteLike,
+  getCountLike,
 };

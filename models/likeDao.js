@@ -1,6 +1,6 @@
 const { appDataSource } = require("./dataSource");
 
-const clickLike = async (userId, productId) => {
+const createLike = async (userId, productId) => {
   try {
     return await appDataSource.query(
       `INSERT INTO likes(
@@ -33,7 +33,26 @@ const deleteLike = async (userId, productId) => {
   }
 };
 
+const getCountLike = async (productId) => {
+  try {
+    return await appDataSource.query(
+      `
+      SELECT 
+      COUNT(l.product_id)
+      FROM likes as l
+      WHERE product_id = ?
+       `,
+      [productId]
+    );
+  } catch (err) {
+    const error = new Error("INVALID_LIKE_GET_COUNT");
+    error.statusCode = 400;
+    throw error;
+  }
+};
+
 module.exports = {
   createLike,
   deleteLike,
+  getCountLike,
 };
