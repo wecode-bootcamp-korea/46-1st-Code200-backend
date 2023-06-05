@@ -11,10 +11,11 @@ const reviewSignUp = async (userId, productId, content, rating) => {
 };
 
 const getAllReview = async (productId) => {
-  const getAllReview = await productDao.getAllReview(productId);
+  const getAllReview = await reviewDao.getAllReview(productId);
   return getAllReview;
 };
 
 module.exports = {
   reviewSignUp,
+  getAllReview,
 };

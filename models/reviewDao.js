@@ -20,7 +20,7 @@ const createReview = async (userId, productId, content, rating) => {
   }
 };
 
-const getProductDetail = async (productId) => {
+const getAllReview = async (productId) => {
   try {
     return await appDataSource.query(
       `
@@ -30,24 +30,33 @@ const getProductDetail = async (productId) => {
       sb.name as subcategory,
       JSON_ARRAYAGG(JSON_OBJECT(
         "userId", u.id,
-        "content", r.content)) AS content,
-      ROUND(AVG(r.rating),1) AS average_rating
+        "content", r.content,
+        "rating", r.rating)) AS content
       FROM products AS p
       INNER JOIN reviews AS r 
       ON r.product_id = p.id
-      INNER JOIN product_images as pi
-      ON pi.product_id = p.id       
+      INNER JOIN users as u
+      ON u.id = r.user_id       
       INNER JOIN subcategories as sb
       ON sb.id = p.subcategory_id 
       INNER JOIN categories as c
       ON c.id = sb.category_id
       WHERE p.id = ?
-      GROUP BY p.name, p.price, p.description, pi.image_url, c.name, sb.name
+      GROUP BY p.name, c.name, sb.name
 	`,
       [productId]
     );
-
+  } catch (err) {
+    console.log("🚀 -----------------------------------------------------🚀");
+    console.log("🚀 | file: reviewDao.js:50 | getAllReview | err:", err);
+    console.log("🚀 -----------------------------------------------------🚀");
+    const error = new Error("INVALID_REVIEW_DATA");
+    error.statusCode = 500;
+    throw error;
+  }
+};
 
 module.exports = {
   createReview,
+  getAllReview,
 };
