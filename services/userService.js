@@ -25,6 +25,7 @@ const signIn = async (email, password) => {
     algorithm: process.env.ALGORITHM,
     expiresIn: process.env.JWT_EXPIRES_IN,
   };
+
   const accessToken = jwt.sign(payload, process.env.JWT_SECRET, header);
   return accessToken;
 };
@@ -43,6 +44,14 @@ const signUp = async (
   agreement_marketing,
   agreement_terms
 ) => {
+  // const pwValidation = new RegExp(
+  //   "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,20})"
+  // );
+  // if (!pwValidation.test(password)) {
+  //   const err = new Error("PASSWORD_IS_NOT_VALID");
+  //   err.statusCode = 409;
+  //   throw err;
+  // }
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
   const createUser = await userDao.createUser(

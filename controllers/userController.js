@@ -38,13 +38,10 @@ const signUp = catchAsync(async (req, res) => {
     agreement_marketing,
     agreement_terms,
   } = req.body;
-
-  await passwordValidationCheck(password);
-  await emailValidationCheck(email);
-
   if (
     !name ||
     !email ||
+    !password ||
     !phone_number ||
     !birthday ||
     !gender ||
@@ -52,7 +49,6 @@ const signUp = catchAsync(async (req, res) => {
     !address_detail ||
     !password ||
     !point ||
-    !agreement_private ||
     !agreement_private ||
     !agreement_marketing ||
     !agreement_terms
