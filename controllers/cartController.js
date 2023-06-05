@@ -1,6 +1,7 @@
 const cartService = require("../services/cartService");
+const { catchAsync } = require("../middleware/error");
 
-const getCartList = async (req, res) => {
+const getCartList = catchAsync(async (req, res) => {
   try {
     const { userId } = req.query;
     const cartsData = await cartService.getCartList(userId);
@@ -9,9 +10,9 @@ const getCartList = async (req, res) => {
   } catch (err) {
     return res.status(err.statusCode || 400).json({ message: err.message });
   }
-};
+});
 
-const updateCartQuantity = async (req, res) => {
+const updateCartQuantity = catchAsync(async (req, res) => {
   try {
     const userId = req.user.id;
     const { quantity } = req.body;
@@ -23,31 +24,20 @@ const updateCartQuantity = async (req, res) => {
   } catch (err) {
     return res.status(err.statusCode || 400).json({ message: err.message });
   }
-};
+});
 
-const deleteCartList = async (req, res) => {
+const deleteCartItems = catchAsync(async (req, res) => {
   try {
-    const { cartId } = req.params;
-    await cartService.deleteCartList(cartId);
-    return res.status(204).json({ message: "CART_DELETED" });
+    const { cartId } = req.query;
+    await cartService.deleteCartItems(cartId);
+    return res.status(204).json({ cartId });
   } catch (err) {
     return res.status(err.statusCode || 500).json({ message: err.message });
   }
-};
-
-const deleteCartItems = async (req, res) => {
-  try {
-    const cartIds = req.body.cartIds;
-    await cartService.deleteCartItems(cartIds);
-    return res.status(204).json({ cartIds });
-  } catch (err) {
-    return res.status(err.statusCode || 500).json({ message: err.message });
-  }
-};
+});
 
 module.exports = {
   getCartList,
   updateCartQuantity,
-  deleteCartList,
   deleteCartItems,
 };

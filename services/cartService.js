@@ -1,32 +1,19 @@
 const cartDao = require("../models/cartDao");
 
 const getCartList = async (userId) => {
-  const cartList = await cartDao.getCartList(userId);
-  return cartList;
+  return cartDao.cartList(userId);
 };
 
 const updateCartQuantity = async (userId, quantity, cartId) => {
-  const updateCartQuantity = await cartDao.updateCartQuantity(
-    userId,
-    quantity,
-    cartId
-  );
-  return updateCartQuantity;
+  return cartDao.updateCartQuantity(userId, quantity, cartId);
 };
 
-const deleteCartList = async (cartId) => {
-  const deleteCartList = await cartDao.deleteCartList(cartId);
-  return deleteCartList;
-};
-
-const deleteCartItems = async (cartIds) => {
-  const deleteCartItems = await cartDao.deleteCartItems(cartIds);
-  return deleteCartItems;
+const deleteCartItems = async (cartId) => {
+  return cartDao.deleteCartItems(cartId);
 };
 
 module.exports = {
   getCartList,
   updateCartQuantity,
-  deleteCartList,
   deleteCartItems,
 };

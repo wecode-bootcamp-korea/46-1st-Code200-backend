@@ -4,17 +4,6 @@ const jwt = require("jsonwebtoken");
 const verifyJWT = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
-    console.log(
-      "🚀 ----------------------------------------------------------------------------------------🚀"
-    );
-    console.log(
-      "🚀 | file: auth.js:7 | verifyJWT | req.headers.authorization:",
-      req.headers.authorization
-    );
-    console.log(
-      "🚀 ----------------------------------------------------------------------------------------🚀"
-    );
-
     if (!token) {
       res.status(401).json({ message: "UNAUTHORIZED" });
     }

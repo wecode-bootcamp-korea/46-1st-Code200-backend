@@ -18,7 +18,7 @@ const getCartList = async (userId) => {
       [userId]
     );
   } catch (err) {
-    const error = new Error("INVALID_DATA_POSTS");
+    const error = new Error("CANT_READ_LIST");
     error.statusCode = 400;
     throw error;
   }
@@ -29,9 +29,10 @@ const updateCartQuantity = async (userId, quantity, cartId) => {
     return await appDataSource.query(
       `
       UPDATE carts
-      SET quantity = ${quantity}
-      WHERE carts.id = ${cartId} AND user_id = ${userId}
-      `
+      SET quantity = ?
+      WHERE carts.id = ? AND user_id = ?
+      `,
+      [quantity, cartId, userId]
     );
   } catch (err) {
     const error = new Error("INVALID_UPDATE_CART_DATA");
@@ -40,29 +41,14 @@ const updateCartQuantity = async (userId, quantity, cartId) => {
   }
 };
 
-const deleteCartList = async (cartId) => {
+const deleteCartItems = async (cartId) => {
   try {
     return await appDataSource.query(
       `
       DELETE FROM carts
-      WHERE carts.id = ?
+      WHERE carts.id IN (?)
     `,
       [cartId]
-    );
-  } catch (err) {
-    const error = new Error("INVALID_DELETE_CART_DATA");
-    error.statusCode = 400;
-    throw error;
-  }
-};
-
-const deleteCartItems = async (cartIds) => {
-  try {
-    const result = await appDataSource.query(
-      `
-      DELETE FROM carts
-      WHERE carts.id IN (${cartIds.join()})
-    `
     );
   } catch (err) {
     const error = new Error("INVALID_DELETE_CART_DATA");
@@ -74,6 +60,5 @@ const deleteCartItems = async (cartIds) => {
 module.exports = {
   getCartList,
   updateCartQuantity,
-  deleteCartList,
   deleteCartItems,
 };
