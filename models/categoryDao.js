@@ -17,14 +17,7 @@ const getCategoryDetail = async () => {
       INNER JOIN subcategories AS sc ON sc.category_id = c.id
       GROUP BY c.id, c.name;
     `;
-    const result = await appDataSource.query(query);
-    return result.map(({ categoryId, categoryName, subcategories }) => ({
-      categoryId,
-      categoryName,
-      subcategories: Array.isArray(subcategories)
-        ? subcategories
-        : JSON.parse(subcategories.replace(/'/g, '"').replace(/\\/g, "")),
-    }));
+    return appDataSource.query(query);
   } catch (error) {
     console.log("Error parsing subcategories JSON:", JSON.stringify(error));
     throw error;
