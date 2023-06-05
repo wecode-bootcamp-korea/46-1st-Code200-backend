@@ -10,6 +10,12 @@ router.post(
   catchAsync(reviewController.reviewSignup)
 );
 
+router.get(
+  "/get/:productId",
+  verifyJWT,
+  catchAsync(reviewController.getAllReview)
+);
+
 module.exports = {
   router,
 };
