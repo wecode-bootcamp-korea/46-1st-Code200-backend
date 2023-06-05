@@ -4,13 +4,10 @@ const jwt = require("jsonwebtoken");
 
 const signIn = async (email, password) => {
   const getUser = await userDao.getUserByEmail(email);
-  console.log(getUser);
   if (!getUser) {
     throw new Error("INVAILD ERROR");
   }
-
   const isMatched = await bcrypt.compare(password, getUser.password);
-
   if (!isMatched) {
     const error = new Error("INVALID_USER");
     error.statusCode = 401;
