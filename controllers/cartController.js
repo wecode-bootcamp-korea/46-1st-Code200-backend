@@ -3,7 +3,7 @@ const { catchAsync } = require("../middleware/error");
 
 const getCartList = catchAsync(async (req, res) => {
   try {
-    const { userId } = req.query;
+    const userId = req.user.id;
     const cartsData = await cartService.getCartList(userId);
 
     return res.status(200).json({ data: cartsData });
