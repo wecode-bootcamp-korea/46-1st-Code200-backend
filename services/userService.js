@@ -3,8 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const checkEmail = async (email) => {
-  const user = await userDao.getByUserEmail(email);
-  return user;
+  return userDao.checkRegisterdEmail(email);
 };
 
 const signIn = async (email, password) => {

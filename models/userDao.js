@@ -95,19 +95,20 @@ const getUserById = async (userId) => {
   }
 };
 
-const getByUserEmail = async (email) => {
+const checkRegisterdEmail = async (email) => {
   try {
-    console.log(email);
-    const [user] = await appDataSource.query(
+    const [result] = await appDataSource.query(
       `
-        SELECT users.email
+        SELECT EXISTS(
+          SELECT
+          id
         FROM users
         WHERE email = ?
+        ) as registerd
       `,
       [email]
     );
-
-    return user;
+    return !!parseInt(result.registerd);
   } catch (err) {
     const error = new Error(
       "An error occurred while checking the email availability."
@@ -120,6 +121,6 @@ const getByUserEmail = async (email) => {
 module.exports = {
   createUser,
   getUserById,
-  getByUserEmail,
+  checkRegisterdEmail,
   getUserByEmail,
 };
