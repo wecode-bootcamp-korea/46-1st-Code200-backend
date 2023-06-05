@@ -30,7 +30,7 @@ const deleteCartItems = catchAsync(async (req, res) => {
   try {
     const { cartId } = req.query;
     await cartService.deleteCartItems(cartId);
-    return res.status(204).json({ cartId });
+    return res.status(204).send();
   } catch (err) {
     return res.status(err.statusCode || 500).json({ message: err.message });
   }
