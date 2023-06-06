@@ -4,16 +4,21 @@ const { catchAsync } = require("../middleware/error");
 const createLike = catchAsync(async (req, res) => {
   const userId = req.user.id;
   const { productId } = req.params;
-  if (!productId) {
+  const isLikedFromBody = req.body.isLiked;
+  if (isLikedFromBody) {
     const error = new Error("KEY_ERROR");
     error.statusCode = 400;
     throw error;
   }
 
-  const [result, isLiked] = await likeService.createLike(userId, productId);
-  if (result) {
-    return res.status(201).json({ countLike: result, isLiked });
-  }
+  const [result, isLikedFromService] = await likeService.createLike(
+    userId,
+    productId
+  );
+  const countLike = result ? result : 0;
+  const likeStatus = isLikedFromService ? true : false;
+
+  return res.status(201).json({ countLike, isLiked: likeStatus });
 });
 
 const deleteLike = catchAsync(async (req, res) => {
