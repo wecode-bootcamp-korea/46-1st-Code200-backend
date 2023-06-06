@@ -1,4 +1,4 @@
-const { appDataSource } = require("./dataSource");
+const { appDataSource } = require('./dataSource');
 
 const getProductDetail = async (productId) => {
   try {
@@ -29,7 +29,50 @@ const getProductDetail = async (productId) => {
     );
   } catch (err) {
     console.log(err);
-    const error = new Error("INVALID_DETAILDATA");
+    const error = new Error('INVALID_DETAILDATA');
+    error.statusCode = 400;
+    throw error;
+  }
+};
+
+const getProductList = async (sort) => {
+  let orderQuery;
+  console.log(sort);
+  switch (sort) {
+    case 'new':
+      orderQuery = `ORDER BY p.create_at DESC`;
+      break;
+    case 'review':
+      orderQuery = `ORDER BY countReview ASC`;
+      break;
+    default:
+      orderQuery = `ORDER BY p.id ASC`;
+  }
+
+  try {
+    const productList = await appDataSource.query(
+      `
+      SELECT
+        p.id,
+        p.name,
+        p.price,
+        (FLOOR(RAND() * (4 - 0 + 1))+0.5) as avgRating,
+        (FLOOR(RAND() * (100 - 0 + 1))) as countReview,
+        JSON_ARRAYAGG(
+          pi.image_url
+        ) as productUrls,
+        p.create_at as createAt
+      FROM products p
+      JOIN product_images pi ON pi.product_id = p.id
+      GROUP BY p.id
+      ${orderQuery}
+	  `
+    );
+
+    return productList;
+  } catch (err) {
+    console.log(err);
+    const error = new Error('INVALID_DETAILDATA');
     error.statusCode = 400;
     throw error;
   }
@@ -37,4 +80,5 @@ const getProductDetail = async (productId) => {
 
 module.exports = {
   getProductDetail,
+  getProductList,
 };
