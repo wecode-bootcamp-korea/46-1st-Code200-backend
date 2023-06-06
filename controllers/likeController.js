@@ -4,8 +4,8 @@ const { catchAsync } = require("../middleware/error");
 const createLike = catchAsync(async (req, res) => {
   const userId = req.user.id;
   const { productId } = req.params;
-  const isLikedFromBody = req.body.isLiked;
-  if (isLikedFromBody) {
+  const isLiked = req.body.isLiked;
+  if (isLiked) {
     const error = new Error("KEY_ERROR");
     error.statusCode = 400;
     throw error;
