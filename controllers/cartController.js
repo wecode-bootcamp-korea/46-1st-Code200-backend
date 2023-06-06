@@ -11,16 +11,6 @@ const getCartList = catchAsync(async (req, res) => {
 const updateCartQuantity = catchAsync(async (req, res) => {
   const userId = req.user.id;
   const { quantity } = req.body;
-  console.log(
-    "🚀 --------------------------------------------------------------------------🚀"
-  );
-  console.log(
-    "🚀 | file: cartController.js:14 | updateCartQuantity | quantity:",
-    quantity
-  );
-  console.log(
-    "🚀 --------------------------------------------------------------------------🚀"
-  );
   const cartId = req.params.cartId;
 
   const cart = await cartService.updateCartQuantity(userId, quantity, cartId);
