@@ -10,20 +10,56 @@ const createLike = async (userId, productId) => {
         `,
       [userId, productId]
     );
-    const countLike = await appDataSource.query(
-      `
-      SELECT
-      COUNT(product_id) as count
-      FROM likes as l
-      WHERE l.product_id = ?
-      `,
-      [productId]
-    );
-    const count = parseInt(countLike[0]["count"]);
-    return { postLike, count };
+    return { postLike };
   } catch (err) {
+    console.log("🚀 -------------------------------------------------🚀");
+    console.log("🚀 | file: likeDao.js:15 | createLike | err:", err);
+    console.log("🚀 -------------------------------------------------🚀");
     const error = new Error("INVALID_LIKEDATA_INPUT");
     error.statusCode = 500;
+    throw error;
+  }
+};
+
+const checkLike = async (userId, productId) => {
+  try {
+    const [result] = await appDataSource.query(
+      `
+      SELECT EXISTS (
+        SELECT
+        id
+        FROM likes 
+        WHERE users_id = ? AND product_id = ?
+    ) isLiked
+    `,
+      [userId, productId]
+    );
+    return !!parseInt(result.isLiked);
+  } catch (err) {
+    console.log("🚀 ------------------------------------------------🚀");
+    console.log("🚀 | file: likeDao.js:39 | checkLike | err:", err);
+    console.log("🚀 ------------------------------------------------🚀");
+    const error = new Error("DATABASE_CONNECTION_ERROR");
+    error.statusCode = 400;
+    throw error;
+  }
+};
+
+const deleteLikes = async (userId, productId) => {
+  try {
+    return await appDataSource.query(
+      `
+      DELETE FROM likes 
+        WHERE users_id= ? AND product_id = ?
+        `,
+      [userId, productId]
+    );
+  } catch (err) {
+    console.log("🚀 --------------------------------------------------🚀");
+    console.log("🚀 | file: likeDao.js:58 | deleteLikes | err:", err);
+    console.log("🚀 --------------------------------------------------🚀");
+    const error = new Error("DATABASE_CONNECTION_ERROR");
+    error.statusCode = 400;
     throw error;
   }
 };
@@ -46,5 +82,7 @@ const deleteLike = async (userId, productId) => {
 
 module.exports = {
   createLike,
+  checkLike,
+  deleteLikes,
   deleteLike,
 };
