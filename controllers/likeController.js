@@ -11,14 +11,10 @@ const createLike = catchAsync(async (req, res) => {
     throw error;
   }
 
-  const [result, isLikedFromService] = await likeService.createLike(
-    userId,
-    productId
-  );
+  const result = await likeService.createLike(userId, productId);
   const countLike = result ? result : 0;
-  const likeStatus = isLikedFromService ? true : false;
 
-  return res.status(201).json({ countLike, isLiked: likeStatus });
+  return res.status(201).json({ countLike });
 });
 
 const deleteLike = catchAsync(async (req, res) => {

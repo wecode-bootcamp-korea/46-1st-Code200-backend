@@ -13,7 +13,7 @@ const createLike = async (userId, productId) => {
       likeCount = await likeDao.countLikes(productId);
     }
 
-    return [likeCount, !isLiked];
+    return likeCount;
   } catch (error) {
     error = new Error(error.message);
     error.statusCode = 400;
