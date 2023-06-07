@@ -4,11 +4,12 @@ const userService = require("../services/userService");
 const verifyJWT = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
+
     if (!token) {
       res.status(401).json({ message: "UNAUTHORIZED" });
     }
-    const userdata = jwt.verify(token, process.env.JWT_SECRET);
 
+    const userdata = jwt.verify(token, process.env.JWT_SECRET);
     const verifyId = userdata.userId;
 
     if (!verifyId) {
@@ -29,6 +30,13 @@ const verifyJWT = async (req, res, next) => {
   }
 };
 
+const optionalVerifyJWT = async (req, res, next) => {
+  if (req.headers.authorization) {
+    verifyJWT(req, res, next);
+  } else next();
+};
+
 module.exports = {
   verifyJWT,
+  optionalVerifyJWT,
 };
