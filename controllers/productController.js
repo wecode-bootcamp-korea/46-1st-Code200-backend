@@ -1,13 +1,40 @@
 const productService = require("../services/productService");
 const { catchAsync } = require("../middleware/error");
 
-const getProductDetail = catchAsync(async (req, res) => {
+const getProductList = catchAsync(async (req, res) => {
+  const {
+    categoryId,
+    productId,
+    minPrice,
+    maxPrice,
+    subcategoryId,
+    orderBy,
+    limit,
+    offset,
+  } = req.query;
+
+  const productsData = await productService.getProductList(
+    categoryId,
+    productId,
+    minPrice,
+    maxPrice,
+    subcategoryId,
+    orderBy,
+    limit,
+    offset
+  );
+  return res.status(200).json({ data: productsData });
+});
+
+const getProductDetail = async (req, res) => {
   const { productId } = req.params;
   const userId = req.user?.id;
-  const product = await productService.getProductDetail(productId, userId);
-  return res.status(200).json({ product });
-});
+
+  const result = await productService.getProductDetail(productId, userId);
+  return res.status(200).json(result);
+};
 
 module.exports = {
   getProductDetail,
+  getProductList,
 };
