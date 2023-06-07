@@ -18,30 +18,18 @@ const getProductList = catchAsync(async (req, res) => {
     limit,
     offset,
   } = req.query;
-  const parsedProductId = productId ? parseInt(productId) : undefined;
-  const parsedSubcategoryId = subcategoryId
-    ? Array.isArray(subcategoryId)
-      ? subcategoryId.map(Number)
-      : [Number(subcategoryId)]
-    : undefined;
-  const parsedMinPrice = minPrice ? parseInt(minPrice) : undefined;
-  const parsedMaxPrice = maxPrice ? parseInt(maxPrice) : undefined;
-  const parsedLimit = limit ? parseInt(limit) : undefined;
-  const parsedOffset = offset ? parseInt(offset) : undefined;
 
   const productsData = await productService.getProductList(
     categoryId,
-    parsedProductId,
-    parsedMinPrice,
-    parsedMaxPrice,
-    parsedSubcategoryId,
+    productId,
+    minPrice,
+    maxPrice,
+    subcategoryId,
     orderBy,
-    parsedLimit,
-    parsedOffset
+    limit,
+    offset
   );
-  return res
-    .status(200)
-    .json({ data: productsData, count: productsData.length });
+  return res.status(200).json({ data: productsData });
 });
 
 module.exports = {

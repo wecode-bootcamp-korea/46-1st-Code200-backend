@@ -29,7 +29,6 @@ const getProductDetail = async (productId) => {
       [productId]
     );
   } catch (err) {
-    console.log(err);
     const error = new Error("INVALID_DETAILDATA");
     error.statusCode = 400;
     throw error;
@@ -41,7 +40,7 @@ const getProductList = async (
   productId,
   minPrice,
   maxPrice,
-  parsedSubcategoryId,
+  subcategoryId,
   orderBy,
   limit,
   offset
@@ -49,11 +48,10 @@ const getProductList = async (
   try {
     const whereCondition = builder.filterBuilder(
       productId,
-      parsedSubcategoryId,
+      subcategoryId,
       minPrice,
       maxPrice
     );
-    console.log(whereCondition);
     const orderQuery = builder.orderByBuilder(orderBy);
     const limitQuery = builder.limitBuilder(limit, offset);
     const [products, total] = await Promise.all([
@@ -95,12 +93,8 @@ const getProductList = async (
         [categoryId]
       ),
     ]);
-    console.log(Promise.all);
-    console.log(total[0].total);
-    console.log(total);
     return { products, total: total[0].total };
   } catch (err) {
-    console.log(err);
     const error = new Error("INVALID_DATA_POSTS");
     error.statusCode = 400;
     throw error;

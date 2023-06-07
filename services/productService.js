@@ -15,7 +15,7 @@ const getProductList = async (
   limit,
   offset
 ) => {
-  const getList = await productDao.getProductList(
+   return productDao.getProductList(
     categoryId,
     productId,
     minPrice,
@@ -25,7 +25,6 @@ const getProductList = async (
     limit,
     offset
   );
-  return getList;
 };
 
 module.exports = {
