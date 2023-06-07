@@ -1,14 +1,12 @@
 const productService = require("../services/productService");
+const { catchAsync } = require("../middleware/error");
 
-const getProductDetail = async (req, res) => {
-  try {
-    const { productId } = req.params;
-    const product = await productService.getProductDetail(productId);
-    return res.status(200).json({ product });
-  } catch (err) {
-    return res.status(err.statusCode || 500).json({ message: err.message });
-  }
-};
+const getProductDetail = catchAsync(async (req, res) => {
+  const { productId } = req.params;
+  const userId = req.user?.id;
+  const product = await productService.getProductDetail(productId, userId);
+  return res.status(200).json({ product });
+});
 
 module.exports = {
   getProductDetail,
