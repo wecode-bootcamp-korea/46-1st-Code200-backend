@@ -14,7 +14,7 @@ const getProductList = async (
   limit,
   offset
 ) => {
-   return productDao.getProductList(
+  return productDao.getProductList(
     categoryId,
     productId,
     minPrice,

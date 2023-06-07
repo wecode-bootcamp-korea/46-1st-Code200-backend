@@ -11,7 +11,7 @@ const getProductDetail = async (productId, userId) => {
         p.description,
         JSON_ARRAYAGG(pi.image_url) as imageUrls,
         (SELECT ROUND(AVG(reviews.rating), 1) FROM reviews WHERE reviews.product_id = p.id) as average,
-        COUNT(l.id) as likeCount,
+        (SELECT COUNT(l.id) FROM likes as l WHERE l.product_id = p.id) as likeCount,
         (ul.id IS NOT NULL) as isLiked,
         sb.name as subcategory,
         c.name as category
@@ -28,10 +28,6 @@ const getProductDetail = async (productId, userId) => {
       	categories as c
       ON 
       	c.id = sb.category_id
-      LEFT JOIN 
-       likes as l
-      ON
-        l.product_id = p.id
       LEFT JOIN
         likes as ul
       ON
