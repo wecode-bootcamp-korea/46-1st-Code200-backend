@@ -1,12 +1,6 @@
 const productService = require("../services/productService");
 const { catchAsync } = require("../middleware/error");
 
-const getProductDetail = catchAsync(async (req, res) => {
-  const { productId } = req.params;
-  const product = await productService.getProductDetail(productId);
-  return res.status(200).json({ data: product });
-});
-
 const getProductList = catchAsync(async (req, res) => {
   const {
     categoryId,
@@ -31,6 +25,14 @@ const getProductList = catchAsync(async (req, res) => {
   );
   return res.status(200).json({ data: productsData });
 });
+
+const getProductDetail = async (req, res) => {
+  const { productId } = req.params;
+  const userId = req.user?.id;
+
+  const result = await productService.getProductDetail(productId, userId);
+  return res.status(200).json(result);
+};
 
 module.exports = {
   getProductDetail,

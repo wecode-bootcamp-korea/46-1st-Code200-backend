@@ -8,10 +8,12 @@ const getCartList = async (userId) => {
       carts.quantity,
       users.id userId,
       products.name,
+      pi.image_url as image,
       products.price,
       sizes.name as size
       FROM carts
       INNER JOIN users ON users.id = carts.user_id
+      INNER JOIN product_images pi ON pi.product_id = carts.product_id
       LEFT JOIN products ON products.id = carts.product_id
       LEFT JOIN sizes ON carts.size_id = sizes.id
       WHERE users.id = ?`,
@@ -40,7 +42,6 @@ const updateCartQuantity = async (userId, quantity, cartId) => {
     throw error;
   }
 };
-
 const deleteCartItems = async (cartId) => {
   try {
     return await appDataSource.query(
