@@ -1,8 +1,15 @@
 const express = require("express");
-const router = express.Router();
 
 const productController = require("../controllers/productController");
-router.get("/:productId", productController.getProductDetail);
+const { optionalVerifyJWT } = require("../middleware/auth");
+
+const router = express.Router();
+
+router.get(
+  "/:productId",
+  optionalVerifyJWT,
+  productController.getProductDetail
+);
 
 module.exports = {
   router,

@@ -1,6 +1,6 @@
 const { appDataSource } = require("./dataSource");
 
-const getProductDetail = async (productId) => {
+const getProductDetail = async (productId, userId) => {
   try {
     const product = await appDataSource.query(
       `
@@ -10,6 +10,8 @@ const getProductDetail = async (productId) => {
         p.description,
         JSON_ARRAYAGG(pi.image_url) as imageUrls,
         (SELECT ROUND(AVG(reviews.rating), 1) FROM reviews WHERE reviews.product_id = p.id) as average,
+        COUNT(l.id) as likeCount,
+        (ul.id IS NOT NULL) as isLiked,
         sb.name as subcategory,
         c.name as category
       FROM products AS p
@@ -25,10 +27,18 @@ const getProductDetail = async (productId) => {
       	categories as c
       ON 
       	c.id = sb.category_id
+      LEFT JOIN 
+       likes as l
+      ON
+        l.product_id = p.id
+      LEFT JOIN
+        likes as ul
+      ON
+        ul.product_id = p.id AND ul.users_id = ?
       WHERE
         p.id = ?
 	  `,
-      [productId]
+      [userId, productId]
     );
 
     const reviews = await appDataSource.query(
@@ -45,6 +55,8 @@ const getProductDetail = async (productId) => {
       [productId]
     );
     const reviewCount = reviews.length;
+
+    product[0].isLiked = !!parseInt(product[0].isLiked);
 
     return { product, reviews, reviewCount };
   } catch (err) {
