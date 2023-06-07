@@ -74,9 +74,31 @@ const getUserById = async (userId) => {
   return userDao.getUserById(userId);
 };
 
+const getUserInfo = async (userId) => {
+  return userDao.getUserInfo(userId);
+};
+
+const updateUser = async (
+  userId,
+  password,
+  address,
+  addressDetail,
+  phoneNumber
+) => {
+  return userDao.updateUser(
+    userId,
+    password,
+    address,
+    addressDetail,
+    phoneNumber
+  );
+};
+
 module.exports = {
   signUp,
   signIn,
   checkEmail,
   getUserById,
+  getUserInfo,
+  updateUser,
 };
