@@ -5,7 +5,7 @@ const { optionalVerifyJWT } = require("../middleware/auth");
 
 const router = express.Router();
 
-router.get("", productController.getProductList);
+router.get("", optionalVerifyJWT, productController.getProductList);
 router.get(
   "/:productId",
   optionalVerifyJWT,

@@ -12,7 +12,8 @@ const getProductList = async (
   subcategoryId,
   orderBy,
   limit,
-  offset
+  offset,
+  userId
 ) => {
   return productDao.getProductList(
     categoryId,
@@ -22,7 +23,8 @@ const getProductList = async (
     subcategoryId,
     orderBy,
     limit,
-    offset
+    offset,
+    userId
   );
 };
 

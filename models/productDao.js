@@ -71,7 +71,8 @@ const getProductList = async (
   subcategoryId,
   orderBy,
   limit,
-  offset
+  offset,
+  userId
 ) => {
   try {
     const whereCondition = builder.filterBuilder(
@@ -111,7 +112,7 @@ const getProductList = async (
           ${orderQuery}
           ${limitQuery}
           `,
-        [categoryId]
+        [categoryId, userId]
       ),
       appDataSource.query(
         `
@@ -124,8 +125,14 @@ const getProductList = async (
         [categoryId]
       ),
     ]);
+
+    for (let product of products) {
+      product.isLiked = !!parseInt(product.isLiked);
+    }
+
     return { products, total: total[0].total };
   } catch (err) {
+    console.log(err);
     const error = new Error("INVALID_DATA_POSTS");
     error.statusCode = 400;
     throw error;
