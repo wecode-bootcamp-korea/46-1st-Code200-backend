@@ -34,7 +34,9 @@ function orderByBuilder(orderBy) {
     ratingAsc: "ORDER BY avgRating ASC, p.id ASC",
     ratingDesc: "ORDER BY avgRating DESC, p.id DESC",
     incomingDesc: "ORDER BY p.incoming_date DESC, p.id ASC",
-    incomingAsc: "ORDER BY p.incoming_date ASC, p.id ASC",
+    incomingAsc: "ORDER BY p.incoming_date DESC, p.id DESC",
+    isLikedAsc: "ORDER BY likeCount ASC, p.id ASC",
+    isLikedDesc: "ORDER BY likeCount DESC, p.id DeSC",
     best: "ORDER BY likes_count DESC",
   });
 

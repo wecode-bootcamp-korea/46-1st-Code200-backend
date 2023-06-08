@@ -2,7 +2,7 @@ const { appDataSource } = require("./dataSource");
 
 const createCart = async (userId, productId, quantity, sizeId) => {
   try {
-    return await appDataSource.query(
+    const create = await appDataSource.query(
       `INSERT INTO carts(
               user_id,
               product_id,
@@ -12,6 +12,29 @@ const createCart = async (userId, productId, quantity, sizeId) => {
           `,
       [userId, productId, quantity, sizeId]
     );
+    if (!create) {
+      return create;
+    } else {
+      const existCart = appDataSource.query(
+        `
+      SELECT
+      *
+      FROM carts
+      WHERE userID =? AND productId= ? AND sizeId =?
+      `,
+        [userId, productId, sizeId]
+      );
+      if (existcart) {
+        `
+        SELECT
+        SUM(carts.quantity)
+        FROM carts
+        GROUP BY productId =?
+        `,
+          [productId];
+      }
+      return existCart;
+    }
   } catch (err) {
     console.log(err);
     const error = new Error("INVALID_DATA_INPUT");
