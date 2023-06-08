@@ -2,6 +2,7 @@ const productService = require("../services/productService");
 const { catchAsync } = require("../middleware/error");
 
 const getProductList = catchAsync(async (req, res) => {
+  const userId = req.user?.id;
   const {
     categoryId,
     productId,
@@ -21,7 +22,8 @@ const getProductList = catchAsync(async (req, res) => {
     subcategoryId,
     orderBy,
     limit,
-    offset
+    offset,
+    userId
   );
   return res.status(200).json({ data: productsData });
 });

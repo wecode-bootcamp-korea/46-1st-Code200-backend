@@ -32,8 +32,10 @@ const verifyJWT = async (req, res, next) => {
 
 const optionalVerifyJWT = async (req, res, next) => {
   if (req.headers.authorization) {
-    verifyJWT(req, res, next);
-  } else next();
+    return verifyJWT(req, res, next);
+  }
+
+  next();
 };
 
 module.exports = {

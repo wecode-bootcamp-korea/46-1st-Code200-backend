@@ -71,7 +71,8 @@ const getProductList = async (
   subcategoryId,
   orderBy,
   limit,
-  offset
+  offset,
+  userId
 ) => {
   try {
     const whereCondition = builder.filterBuilder(
@@ -92,6 +93,8 @@ const getProductList = async (
               p.incoming_date,
               sc.id as subcategory_id,
               sc.name as subcategory_name,
+              (SELECT COUNT(l.id) FROM likes as l WHERE l.product_id = p.id) as likeCount,
+              (ul.id IS NOT NULL) as isLiked,
               round(AVG(r.rating), 2) as avgRating,
               COUNT(r.rating) as countReview,
               (
@@ -103,12 +106,13 @@ const getProductList = async (
           INNER JOIN subcategories sc ON sc.id = p.subcategory_id
           INNER JOIN categories c     ON c.id = sc.category_id AND c.id = ?
           LEFT JOIN reviews r         ON r.product_id = p.id
+          LEFT JOIN likes as ul       ON ul.product_id = p.id AND ul.users_id = ?
           ${whereCondition}
           GROUP BY p.id
           ${orderQuery}
           ${limitQuery}
           `,
-        [categoryId]
+        [categoryId, userId]
       ),
       appDataSource.query(
         `
@@ -121,8 +125,14 @@ const getProductList = async (
         [categoryId]
       ),
     ]);
+
+    for (let product of products) {
+      product.isLiked = !!parseInt(product.isLiked);
+    }
+
     return { products, total: total[0].total };
   } catch (err) {
+    console.log(err);
     const error = new Error("INVALID_DATA_POSTS");
     error.statusCode = 400;
     throw error;

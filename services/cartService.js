@@ -1,5 +1,9 @@
 const cartDao = require("../models/cartDao");
 
+const createCart = async (userId, productId, quantity, sizeId) => {
+  return cartDao.createCart(userId, productId, quantity, sizeId);
+};
+
 const getCartList = async (userId) => {
   return cartDao.getCartList(userId);
 };
@@ -13,6 +17,7 @@ const deleteCartItems = async (cartId) => {
 };
 
 module.exports = {
+  createCart,
   getCartList,
   updateCartQuantity,
   deleteCartItems,
