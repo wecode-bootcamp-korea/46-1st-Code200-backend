@@ -1,6 +1,19 @@
 const cartService = require("../services/cartService");
 const { catchAsync } = require("../middleware/error");
 
+const createCart = catchAsync(async (req, res) => {
+  const userId = req.user.id;
+  const { productId, quantity, sizeId } = req.body;
+
+  if (!quantity || !userId || !productId || !sizeId) {
+    return res.status(400).json({ message: "KEY_ERROR" });
+  }
+
+  await cartService.createCart(userId, productId, quantity, sizeId);
+
+  res.status(201).json({ message: "POSTUP_SUCCESS" });
+});
+
 const getCartList = catchAsync(async (req, res) => {
   const userId = req.user.id;
   const cartsData = await cartService.getCartList(userId);
@@ -26,6 +39,7 @@ const deleteCartItems = catchAsync(async (req, res) => {
 });
 
 module.exports = {
+  createCart,
   getCartList,
   updateCartQuantity,
   deleteCartItems,
