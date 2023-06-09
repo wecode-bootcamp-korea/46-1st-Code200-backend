@@ -2,41 +2,40 @@ const { appDataSource } = require("./dataSource");
 
 const createCart = async (userId, productId, quantity, sizeId) => {
   try {
-    const create = await appDataSource.query(
+    const [existedCart] = await appDataSource.query(
+      `
+      SELECT 
+        id
+      FROM carts
+      WHERE user_id    = ?
+      AND   product_id = ?
+      AND   size_id    = ?
+    `,
+      [userId, productId, sizeId]
+    );
+
+    if (existedCart) {
+      return appDataSource.query(
+        `
+        UPDATE carts
+        SET    quantity = quantity + ?
+        WHERE  id = ? 
+      `,
+        [quantity, existedCart.id]
+      );
+    }
+
+    return appDataSource.query(
       `INSERT INTO carts(
-              user_id,
-              product_id,
-              quantity,
-              size_id
-          ) VALUES (?, ?, ?, ?);
-          `,
+                user_id,
+                product_id,
+                quantity,
+                size_id
+            ) VALUES (?, ?, ?, ?);
+            `,
       [userId, productId, quantity, sizeId]
     );
-    if (!create) {
-      return create;
-    } else {
-      const existCart = appDataSource.query(
-        `
-      SELECT
-      *
-      FROM carts
-      WHERE userID =? AND productId= ? AND sizeId =?
-      `,
-        [userId, productId, sizeId]
-      );
-      if (existcart) {
-        `
-        SELECT
-        SUM(carts.quantity)
-        FROM carts
-        GROUP BY productId =?
-        `,
-          [productId];
-      }
-      return existCart;
-    }
   } catch (err) {
-    console.log(err);
     const error = new Error("INVALID_DATA_INPUT");
     error.statusCode = 400;
     throw error;
@@ -45,7 +44,7 @@ const createCart = async (userId, productId, quantity, sizeId) => {
 
 const getCartList = async (userId) => {
   try {
-    return await appDataSource.query(
+    const cartItems = await appDataSource.query(
       `SELECT
       carts.id as cartId,
       carts.quantity,
@@ -62,6 +61,10 @@ const getCartList = async (userId) => {
       WHERE users.id = ?`,
       [userId]
     );
+
+    const cartCountItem = cartItems.length;
+
+    return { cartItems, cartCountItem };
   } catch (err) {
     const error = new Error("CANT_READ_LIST");
     error.statusCode = 400;
